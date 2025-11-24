@@ -4,17 +4,17 @@ A full-stack MERN e-commerce application with a sleek, modern design inspired by
 
 ## 📸 Demo Screenshots
 
-![Desktop Home Page](demo%20images/Screenshot%20From%202025-11-24%2015-48-30.png)
+![Desktop Home Page](demo/Screenshot%20From%202025-11-24%2015-48-30.png)
 
-![Product Grid](demo%20images/Screenshot%20From%202025-11-24%2015-49-09.png)
-
-
-![Tablet Layout](demo%20images/Screenshot%20From%202025-11-24%2015-49-20.png)
+![Product Grid](demo/Screenshot%20From%202025-11-24%2015-49-09.png)
 
 
-![Mobile Interface](demo%20images/Screenshot%20From%202025-11-24%2015-49-42.png)
+![Tablet Layout](demo/Screenshot%20From%202025-11-24%2015-49-20.png)
 
-![Mobile Features](demo%20images/Screenshot%20From%202025-11-24%2015-49-52.png)
+
+![Mobile Interface](demo/Screenshot%20From%202025-11-24%2015-49-42.png)
+
+![Mobile Features](demo/Screenshot%20From%202025-11-24%2015-49-52.png)
 
 
 ## 🚀 Features

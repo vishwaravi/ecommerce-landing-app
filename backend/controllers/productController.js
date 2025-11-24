@@ -11,10 +11,20 @@ import Product from '../models/Product.js';
  */
 export const getProducts = async (req, res) => {
   try {
-    const { category, minPrice, maxPrice, sort } = req.query;
+    const { category, minPrice, maxPrice, sort, search } = req.query;
     
     // Build filter object
     let filter = {};
+    
+    // Add search filter if provided
+    if (search && search.trim()) {
+      const searchRegex = new RegExp(search.trim(), 'i');
+      filter.$or = [
+        { name: searchRegex },
+        { description: searchRegex },
+        { category: searchRegex }
+      ];
+    }
     
     if (category) {
       filter.category = category;

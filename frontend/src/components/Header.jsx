@@ -9,8 +9,8 @@ const MAX_HISTORY_ITEMS = 5;
  * Header Component with Search Bar, Autosuggest, and Search History
  * Displays navigation and search functionality with dropdown suggestions
  */
-const Header = ({ cartCount = 0 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const Header = ({ cartCount = 0, searchQuery = '', onSearchChange }) => {
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -18,7 +18,12 @@ const Header = ({ cartCount = 0 }) => {
   const [showHistory, setShowHistory] = useState(false);
   
   // Debounce search query to avoid excessive API calls
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const debouncedSearchQuery = useDebounce(localSearchQuery, 300);
+  
+  // Sync parent searchQuery with local state when parent changes search externally
+  useEffect(() => {
+    setLocalSearchQuery(searchQuery);
+  }, [searchQuery]);
   
   // Handle click outside to close suggestions
   const searchRef = useClickOutside(() => {
@@ -106,7 +111,8 @@ const Header = ({ cartCount = 0 }) => {
    * Handle suggestion click - autofill search bar and save to history
    */
   const handleSuggestionClick = (productName) => {
-    setSearchQuery(productName);
+    setLocalSearchQuery(productName);
+    onSearchChange && onSearchChange(productName);
     saveToHistory(productName);
     setShowSuggestions(false);
     setShowHistory(false);
@@ -116,7 +122,8 @@ const Header = ({ cartCount = 0 }) => {
    * Handle history item click
    */
   const handleHistoryClick = (term) => {
-    setSearchQuery(term);
+    setLocalSearchQuery(term);
+    onSearchChange && onSearchChange(term);
     setShowHistory(false);
   };
 
@@ -124,8 +131,11 @@ const Header = ({ cartCount = 0 }) => {
    * Handle search input change
    */
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    if (e.target.value.trim() === '') {
+    const value = e.target.value;
+    setLocalSearchQuery(value);
+    onSearchChange && onSearchChange(value);
+    
+    if (value.trim() === '') {
       setSuggestions([]);
       setShowSuggestions(false);
     }
@@ -135,7 +145,7 @@ const Header = ({ cartCount = 0 }) => {
    * Handle search input focus
    */
   const handleSearchFocus = () => {
-    if (searchQuery.trim() === '' && searchHistory.length > 0) {
+    if (localSearchQuery.trim() === '' && searchHistory.length > 0) {
       setShowHistory(true);
       setShowSuggestions(false);
     }
@@ -145,8 +155,8 @@ const Header = ({ cartCount = 0 }) => {
    * Handle Enter key press to save search
    */
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
-      saveToHistory(searchQuery);
+    if (e.key === 'Enter' && localSearchQuery.trim()) {
+      saveToHistory(localSearchQuery);
       setShowSuggestions(false);
       setShowHistory(false);
     }
@@ -179,7 +189,7 @@ const Header = ({ cartCount = 0 }) => {
                 <input
                   type="text"
                   placeholder="Search products..."
-                  value={searchQuery}
+                  value={localSearchQuery}
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
                   onKeyDown={handleKeyDown}

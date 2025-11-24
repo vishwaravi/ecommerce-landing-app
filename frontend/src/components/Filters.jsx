@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 /**
  * Filters Component
@@ -20,12 +20,34 @@ const Filters = ({ filters, onFilterChange }) => {
   ];
 
   const priceRanges = [
-    { label: 'All Prices', min: null, max: null },
-    { label: 'Under ₹5,000', min: 0, max: 5000 },
-    { label: '₹5,000 - ₹15,000', min: 5000, max: 15000 },
-    { label: '₹15,000 - ₹50,000', min: 15000, max: 50000 },
-    { label: '₹50,000+', min: 50000, max: null },
+    { id: 'all', label: 'All Prices', min: null, max: null },
+    { id: 'under-5k', label: 'Under ₹5,000', min: 0, max: 5000 },
+    { id: '5k-15k', label: '₹5,000 - ₹15,000', min: 5000, max: 15000 },
+    { id: '15k-50k', label: '₹15,000 - ₹50,000', min: 15000, max: 50000 },
+    { id: '50k-plus', label: '₹50,000+', min: 50000, max: null },
   ];
+
+  // Helper function to check if a price range is selected
+  const isPriceRangeSelected = (range) => {
+    const { minPrice, maxPrice } = filters;
+    
+    // Handle null values explicitly
+    if (range.min === null && range.max === null) {
+      return minPrice === null && maxPrice === null;
+    }
+    
+    // Handle cases where one value is null
+    if (range.min !== null && range.max === null) {
+      return minPrice === range.min && maxPrice === null;
+    }
+    
+    if (range.min === null && range.max !== null) {
+      return minPrice === null && maxPrice === range.max;
+    }
+    
+    // Both values are numbers
+    return minPrice === range.min && maxPrice === range.max;
+  };
 
   const handleCategoryChange = (category) => {
     onFilterChange({
@@ -77,7 +99,7 @@ const Filters = ({ filters, onFilterChange }) => {
       </div>
 
       {/* Desktop: Sidebar Filters */}
-      <div className="hidden md:block bg-white border border-gray-200 rounded-lg p-6 sticky top-24">
+      <div className="hidden md:block bg-white border border-gray-200 rounded-lg p-6 h-fit">
         <h3 className="text-xl font-bold text-black mb-6">Filters</h3>
         
         {/* Category Filter */}
@@ -109,15 +131,14 @@ const Filters = ({ filters, onFilterChange }) => {
             Price Range
           </label>
           <div className="space-y-2">
-            {priceRanges.map((range, index) => (
-              <label key={index} className="flex items-center cursor-pointer group">
+            {priceRanges.map((range) => (
+              <label key={range.id} className="flex items-center cursor-pointer group">
                 <input
+                  id={`price-${range.id}`}
                   type="radio"
-                  name="priceRange"
-                  checked={
-                    filters.minPrice === range.min &&
-                    filters.maxPrice === range.max
-                  }
+                  name="priceRange-desktop"
+                  value={range.id}
+                  checked={isPriceRangeSelected(range)}
                   onChange={() => handlePriceRangeChange(range)}
                   className="w-4 h-4 text-black focus:ring-black"
                 />
@@ -231,15 +252,14 @@ const Filters = ({ filters, onFilterChange }) => {
                 Price Range
               </label>
               <div className="space-y-2">
-                {priceRanges.map((range, index) => (
-                  <label key={index} className="flex items-center cursor-pointer">
+                {priceRanges.map((range) => (
+                  <label key={range.id} className="flex items-center cursor-pointer">
                     <input
+                      id={`mobile-price-${range.id}`}
                       type="radio"
-                      name="priceRange"
-                      checked={
-                        filters.minPrice === range.min &&
-                        filters.maxPrice === range.max
-                      }
+                      name="priceRange-mobile"
+                      value={range.id}
+                      checked={isPriceRangeSelected(range)}
                       onChange={() => handlePriceRangeChange(range)}
                       className="w-4 h-4 text-black focus:ring-black"
                     />
@@ -265,4 +285,5 @@ const Filters = ({ filters, onFilterChange }) => {
   );
 };
 
-export default Filters;
+// Memoize to prevent unnecessary re-renders when products change
+export default React.memo(Filters);

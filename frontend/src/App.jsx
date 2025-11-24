@@ -15,6 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     category: '',
     minPrice: null,
@@ -79,7 +80,7 @@ function App() {
   };
 
   /**
-   * Fetch products from API when filters change
+   * Fetch products from API when filters or search change
    */
   useEffect(() => {
     const loadProducts = async () => {
@@ -93,12 +94,9 @@ function App() {
         if (filters.minPrice !== null) params.minPrice = filters.minPrice;
         if (filters.maxPrice !== null) params.maxPrice = filters.maxPrice;
         if (filters.sort) params.sort = filters.sort;
+        if (searchQuery.trim()) params.search = searchQuery.trim();
 
-        // Add minimum loading delay to prevent glitch effect
-        const [response] = await Promise.all([
-          fetchProducts(params),
-          new Promise(resolve => setTimeout(resolve, 1000))
-        ]);
+        const response = await fetchProducts(params);
         
         setProducts(response.data || []);
       } catch (err) {
@@ -113,7 +111,7 @@ function App() {
     };
 
     loadProducts();
-  }, [filters]);
+  }, [filters, searchQuery]);
 
   /**
    * Handle filter changes from Filters component
@@ -125,34 +123,42 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {/* Header with Search */}
-      <Header cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)} />
+      <Header 
+        cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
 
       {/* Hero Banner - Hidden on mobile */}
       <div className="hidden md:block">
         <Hero />
       </div>
 
-      {/* Main Content */}
-      <main className="flex-grow container mx-auto px-3 md:px-6 py-4 md:py-8">
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar Filters - Desktop */}
-          <aside className="hidden md:block w-64 flex-shrink-0">
-            <Filters filters={filters} onFilterChange={handleFilterChange} />
-          </aside>
+      {/* Mobile Filters - Outside main content */}
+      <div className="md:hidden">
+        <Filters filters={filters} onFilterChange={handleFilterChange} />
+      </div>
 
-          {/* Mobile Filters */}
-          <div className="md:hidden">
-            <Filters filters={filters} onFilterChange={handleFilterChange} />
-          </div>
+      {/* Main Content - Two Column Layout */}
+      <main className="flex-grow">
+        <div className="container mx-auto px-3 md:px-6 py-4 md:py-8">
+          <div className="md:grid md:grid-cols-[280px_1fr] md:gap-8">
+            {/* Left Column: Fixed Filter Sidebar - Desktop Only */}
+            <aside className="hidden md:block">
+              <div className="sticky top-24">
+                <Filters filters={filters} onFilterChange={handleFilterChange} />
+              </div>
+            </aside>
 
-          {/* Products Grid */}
-          <div className="flex-1">
-            <ProductGrid 
-              products={products} 
-              loading={loading} 
-              error={error}
-              onAddToCart={addToCart}
-            />
+            {/* Right Column: Products Grid - Isolated */}
+            <section className="w-full">
+              <ProductGrid 
+                products={products} 
+                loading={loading} 
+                error={error}
+                onAddToCart={addToCart}
+              />
+            </section>
           </div>
         </div>
       </main>

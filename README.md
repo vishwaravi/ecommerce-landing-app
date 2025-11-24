@@ -114,15 +114,6 @@ npm run dev
 
 The frontend will run on `http://localhost:5173`
 
-## 🗄️ Database Seeding
-
-The project includes a seed script to populate the database with sample products:
-
-```bash
-cd backend
-node seedData.js
-```
-
 This will:
 - Clear existing products
 - Add 62 products across 7 categories

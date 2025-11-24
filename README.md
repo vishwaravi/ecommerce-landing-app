@@ -4,23 +4,18 @@ A full-stack MERN e-commerce application with a sleek, modern design inspired by
 
 ## 📸 Demo Screenshots
 
-### Desktop View
 ![Desktop Home Page](demo%20images/Screenshot%20From%202025-11-24%2015-48-30.png)
-*Main landing page with product grid and sidebar filters*
 
 ![Product Grid](demo%20images/Screenshot%20From%202025-11-24%2015-49-09.png)
-*Product display with hover effects and Quick Add buttons*
 
-### Tablet View
+
 ![Tablet Layout](demo%20images/Screenshot%20From%202025-11-24%2015-49-20.png)
-*Responsive layout optimized for tablet devices*
 
-### Mobile View
+
 ![Mobile Interface](demo%20images/Screenshot%20From%202025-11-24%2015-49-42.png)
-*Mobile-optimized interface with bottom navigation*
 
 ![Mobile Features](demo%20images/Screenshot%20From%202025-11-24%2015-49-52.png)
-*Mobile search and filtering capabilities*
+
 
 ## 🚀 Features
 

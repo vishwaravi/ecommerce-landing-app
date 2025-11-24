@@ -72,7 +72,7 @@ A full-stack MERN e-commerce application with a sleek, modern design inspired by
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd ECOM
+cd ecommerce-landing-app
 ```
 
 ### 2. Backend Setup

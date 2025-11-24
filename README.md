@@ -2,6 +2,12 @@
 
 A full-stack MERN e-commerce application with a sleek, modern design inspired by professional templates. Features a responsive layout, shopping cart functionality, advanced filtering, and smooth user experience.
 
+## 🎥 Demo Video
+
+> the Demo video is Inside the demo folder
+
+*Watch the full demo showcasing all features including search, filters, cart, and responsive design*
+
 ## 📸 Demo Screenshots
 
 ![Desktop Home Page](demo/Screenshot%20From%202025-11-24%2015-48-30.png)
